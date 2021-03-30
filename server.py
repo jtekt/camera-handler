@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse, Response
 from controller.camera import Camera
 from controller.logics import get_last_capture_boolean
-from uvicorn.main import Server
 import time
 
 # App initialization
