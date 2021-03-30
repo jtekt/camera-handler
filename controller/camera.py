@@ -18,7 +18,7 @@ class Camera(object):
     def get_frame(self):
         _, self.frame = self.cap.read()
 
-    def get_frame_to_byte(self):
+    def get_frame_in_byte(self):
         return cv2.imencode(".jpeg", self.frame)[1].tobytes()
 
     def write_frame(self, name):

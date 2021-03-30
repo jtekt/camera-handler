@@ -1,12 +1,20 @@
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse, Response
 from controller.camera import Camera
+from controller.logics import get_last_capture_boolean
 from uvicorn.main import Server
+import time
 
-
+# App initialization
 app = FastAPI()
+frame = None
+last_capture_time = None
+fps = 1
+# users = 0
+
+# Camera initialization
 can = Camera()
-users = 0
+
 
 @app.get("/")
 def root():
@@ -15,14 +23,9 @@ def root():
 
 @app.get("/frame")
 async def frame():
-    global can
-    # print(f"Current stream flag: {can.stream_flag}")
-    # if can.stream_flag:
-    #     frame = can.get_frame_to_byte()
-    # else:
-    #     can.get_frame()
-    #     frame = can.get_frame_to_byte()
-    frame = can.get_frame_to_byte()
+    global frame, last_capture_time
+    frame = can.get_frame_in_byte()
+    last_capture_time = time.time()
     return Response(content=frame, media_type="image/jpeg")
 
 
@@ -33,23 +36,25 @@ async def get_stream():
     )
 
 
+@app.get("/restart")
+async def restart():
+    try:
+        can.stop_camera()
+        can.start_camera()
+        return {"message": "Camera has been restarted"}
+    except Exception as e:
+        return {"message": "Camera restart failed", "detail": str(e)}
+
+
 def yield_stream():
-    # # Users management
-    # global users
-    # users += 1
-    # if users == 1:
-    #     print("Starting stream")
-    #     can.start_stream()
+    global frame, last_capture_time, fps
 
     # Get into looping
     try:
         while True:
-            frame = can.get_frame_to_byte()
+            if get_last_capture_boolean(frame, last_capture_time, fps):
+                frame = can.get_frame_in_byte()
+                last_capture_time = time.time()
             yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
     except:
-        # # Users management
-        # users -= 1
-        # if users == 0:
-        #     print("Stopping stream")
-        #     can.stop_stream()
         print("User Disconnected")
