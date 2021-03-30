@@ -24,6 +24,7 @@ def root():
 @app.get("/frame")
 async def frame():
     global frame, last_capture_time
+    can.get_frame()
     frame = can.get_frame_in_byte()
     last_capture_time = time.time()
     return Response(content=frame, media_type="image/jpeg")
@@ -53,6 +54,7 @@ def yield_stream():
     try:
         while True:
             if get_last_capture_boolean(frame, last_capture_time, fps):
+                can.get_frame()
                 frame = can.get_frame_in_byte()
                 last_capture_time = time.time()
             yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")

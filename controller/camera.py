@@ -7,7 +7,6 @@ class Camera(object):
     def __init__(self):
         self.stream_flag = False
         self.start_camera()
-        self.start_stream()
 
     def start_camera(self):
         self.cap = cv2.VideoCapture(0)
