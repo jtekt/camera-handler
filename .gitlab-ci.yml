@@ -1,6 +1,6 @@
 stages:
   - build
-  - deploy
+  # - deploy
 
 variables:
   APPLICATION_NAME: camera-handler-fastapi
@@ -16,8 +16,9 @@ build:
     - docker push $DOCKER_IMAGE
     - echo "Image built and pushed:" "$DOCKER_IMAGE"
 
-deploy:
-  stage: deploy
-  script:
-    - docker stop camera-handler-fastapi 2> /dev/null && echo "Stopping old image" || echo "Starting new image"
-    - docker run --rm -d -p 8000:80 --device=/dev/video0:/dev/video0 --name=camera-handler-fastapi $DOCKER_IMAGE && echo "New image started at 172.16.98.151:8000"
+# Commented out as deployment is done manually for now.
+# deploy:
+#   stage: deploy
+#   script:
+#     - docker stop camera-handler-fastapi 2> /dev/null && echo "Stopping old image" || echo "Starting new image"
+#     - docker run --rm -d -p 8000:80 --device=/dev/video0:/dev/video0 --name=camera-handler-fastapi $DOCKER_IMAGE && echo "New image started at 172.16.98.151:8000"
