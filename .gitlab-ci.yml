@@ -1,0 +1,14 @@
+stages:
+  - build
+
+variables:
+  APPLICATION_NAME: camera-handler-fastapi
+  GITLAB_REGISTRY: 172.16.98.151:5000
+  DOCKER_IMAGE: $GITLAB_REGISTRY/$APPLICATION_NAME
+
+build:
+  stage: build
+  script:
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+    - echo "Image built and pushed:" "$DOCKER_IMAGE"
