@@ -7,6 +7,8 @@ variables:
   DOCKER_IMAGE: $GITLAB_REGISTRY/$APPLICATION_NAME
 
 build:
+  tags:
+    - aarch64
   stage: build
   script:
     - docker build -t $DOCKER_IMAGE .
