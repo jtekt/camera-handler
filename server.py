@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, Cookie
+from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, Response
 from controller.camera import Camera
 from controller.logics import get_last_capture_boolean
@@ -12,12 +14,21 @@ last_capture_time = None
 fps = 1
 # users = 0
 
+# Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 # Camera initialization
 can = Camera()
 
 
 @app.get("/")
-def root():
+def root(response: Response):
     return {"message": "This is the root"}
 
 
