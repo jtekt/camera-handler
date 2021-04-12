@@ -17,7 +17,12 @@ can = Camera()
 
 @app.get("/")
 def root():
-    return {"message": "This is the root"}
+    return dict(
+        application_name="Camera handler",
+        version="1.0.0",
+        author="Maxime MOREILLON",
+        camera_opened=can.cap.isOpened(),
+    )
 
 
 @app.get("/frame")
