@@ -2,9 +2,8 @@ from fastapi import FastAPI, Header, Cookie
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, Response
-from controller.camera import Camera
+from controller.camera import Camera, get_camera_settings
 from controller.logics import get_last_capture_boolean
-from uvicorn.main import Server
 import time
 
 # App initialization
@@ -28,13 +27,19 @@ can = Camera()
 
 
 @app.get("/")
-def root(response: Response):
-    return {"message": "This is the root"}
+def root():
+    return dict(
+        application_name="Camera handler",
+        version="1.0.0",
+        author="Maxime MOREILLON",
+        camera_opened=can.cap.isOpened(),
+    )
 
 
 @app.get("/frame")
 async def frame():
     global frame, last_capture_time
+    can.get_frame()
     frame = can.get_frame_in_byte()
     last_capture_time = time.time()
     return Response(content=frame, media_type="image/jpeg")
@@ -47,7 +52,7 @@ async def get_stream():
     )
 
 
-@app.get("/restart")
+@app.get("/camera/restart")
 async def restart():
     try:
         can.stop_camera()
@@ -57,6 +62,12 @@ async def restart():
         return {"message": "Camera restart failed", "detail": str(e)}
 
 
+@app.get("/camera/settings")
+async def camera_settings():
+    settings = get_camera_settings()
+    return settings
+
+
 def yield_stream():
     global frame, last_capture_time, fps
 
@@ -64,6 +75,7 @@ def yield_stream():
     try:
         while True:
             if get_last_capture_boolean(frame, last_capture_time, fps):
+                can.get_frame()
                 frame = can.get_frame_in_byte()
                 last_capture_time = time.time()
             yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
