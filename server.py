@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse, Response
-from controller.camera import Camera
+from controller.camera import Camera, get_camera_settings
 from controller.logics import get_last_capture_boolean
 import time
 
@@ -41,7 +41,7 @@ async def get_stream():
     )
 
 
-@app.get("/restart")
+@app.get("/camera/restart")
 async def restart():
     try:
         can.stop_camera()
@@ -49,6 +49,12 @@ async def restart():
         return {"message": "Camera has been restarted"}
     except Exception as e:
         return {"message": "Camera restart failed", "detail": str(e)}
+
+
+@app.get("/camera/settings")
+async def camera_settings():
+    settings = get_camera_settings()
+    return settings
 
 
 def yield_stream():
