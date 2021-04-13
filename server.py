@@ -7,9 +7,6 @@ from controller.camera import Camera
 # App initialization
 app = FastAPI()
 
-# Camera initialization
-can = Camera()
-
 # Middleware
 app.add_middleware(
     CORSMiddleware,
