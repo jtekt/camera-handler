@@ -27,6 +27,26 @@ def root():
     )
 
 
+@router.get("/start")
+async def start_camera():
+    try:
+        if can.cap.isOpened():
+            return {"message": "Camera is already opened"}
+        can.start_camera()
+        return {"message": "Camera has been started"}
+    except Exception as e:
+        return {"message": "Camera start failed", "detail": str(e)}
+
+
+@router.get("/stop")
+async def stop_camera():
+    try:
+        can.stop_camera()
+        return {"message": "Camera has been stopped"}
+    except Exception as e:
+        return {"message": "Camera stop failed", "detail": str(e)}
+
+
 @router.get("/frame")
 async def frame():
     global frame, last_capture_time
