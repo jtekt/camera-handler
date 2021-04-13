@@ -2,6 +2,7 @@ import cv2
 from threading import Thread
 import time
 import subprocess
+import os
 
 
 class Camera(object):
