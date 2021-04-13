@@ -2,8 +2,9 @@ from fastapi import FastAPI, Header, Cookie
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, Response
-from controller.camera import Camera, get_camera_settings
+from controller.camera import Camera, CameraConfig
 from controller.logics import get_last_capture_boolean
+from model.camera import Configuration
 import time
 
 # App initialization
@@ -19,7 +20,7 @@ app.add_middleware(
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 # Camera initialization
@@ -64,7 +65,17 @@ async def restart():
 
 @app.get("/camera/settings")
 async def camera_settings():
-    settings = get_camera_settings()
+    settings = CameraConfig.get_camera_settings()
+    return settings
+
+
+@app.patch("/camera/settings")
+async def configure_camera(configuration: Configuration = {}):
+    configuration = configuration.dict(exclude_unset=True)
+
+    if configuration:
+        CameraConfig.configure_camera(configuration)
+    settings = CameraConfig.get_camera_settings()
     return settings
 
 
