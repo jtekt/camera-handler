@@ -14,7 +14,7 @@ build-dev:
   script:
     - docker build -t $DOCKER_IMAGE:dev .
     - docker push $DOCKER_IMAGE:dev
-    - echo "Image built and pushed:" "$DOCKER_IMAGE"
+    - echo "Image built and pushed:" "$DOCKER_IMAGE:dev"
 
 build-prod:
   tags:
