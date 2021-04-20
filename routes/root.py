@@ -1,8 +1,7 @@
 from fastapi import Header, Cookie, APIRouter
-from controller.camera import Camera
+from controller.camera import Camera, get_last_capture_boolean
 from typing import Optional
 from fastapi.responses import StreamingResponse, Response
-from controller.logics import get_last_capture_boolean
 import time
 
 # Router

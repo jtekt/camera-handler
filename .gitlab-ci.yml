@@ -1,5 +1,6 @@
 stages:
-  - build
+  - build-dev
+  - build-prod
 
 variables:
   APPLICATION_NAME: camera-handler-fastapi
@@ -9,7 +10,18 @@ variables:
 build:
   tags:
     - aarch64
-  stage: build
+  stage: build-dev
+  script:
+    - docker build -t $DOCKER_IMAGE:dev .
+    - docker push $DOCKER_IMAGE:dev
+    - echo "Image built and pushed:" "$DOCKER_IMAGE"
+
+build:
+  tags:
+    - aarch64
+  stage: build-prod
+  rules:
+    - when: manual
   script:
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE

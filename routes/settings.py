@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from controller import settings as settings_controller
-from model.camera import Configuration
+from model.settings import Configuration
 
 router = APIRouter(prefix="/settings")
 
