@@ -15,7 +15,8 @@ class Camera(object):
         self.cap.release()
 
     def get_frame(self):
-        _, self.frame = self.cap.read()
+        _, frame = self.cap.read()
+        self.frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
     def get_frame_in_byte(self):
         return cv2.imencode(".jpeg", self.frame)[1].tobytes()

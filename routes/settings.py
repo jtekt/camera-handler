@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from controller import settings as settings_controller
-from model.settings import Configuration
+from validation.settings import Configuration
 
 router = APIRouter(prefix="/settings")
 
