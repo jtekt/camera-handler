@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes.camera import router as CameraRouter
-from routes.root import router as RootRouter
+from routes import root, settings
 from controller.camera import Camera
 
 # App initialization
@@ -17,5 +16,5 @@ app.add_middleware(
 )
 
 # Add routes
-app.include_router(RootRouter)
-app.include_router(CameraRouter)
+app.include_router(root.router)
+app.include_router(settings.router)
