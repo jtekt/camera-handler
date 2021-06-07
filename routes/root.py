@@ -14,7 +14,7 @@ can = Camera()
 # Initialization
 frame = None
 last_capture_time = None
-fps = 1.00 / float(os.getenv('FPS', 0.5)) # Not FPS, frequency
+fps = 1.00 / float(os.getenv('FPS', 2.0)) # Not FPS, frequency
 
 
 @router.get("/")
