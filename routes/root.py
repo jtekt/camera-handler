@@ -13,7 +13,7 @@ can = Camera()
 # Initialization
 frame = None
 last_capture_time = None
-fps = 2
+fps = 0.5 # Not FPS, frequency
 
 
 @router.get("/")
