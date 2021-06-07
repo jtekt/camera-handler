@@ -3,6 +3,7 @@ from controller.camera import Camera, get_last_capture_boolean
 from typing import Optional
 from fastapi.responses import StreamingResponse, Response
 import time
+import os
 
 # Router
 router = APIRouter(prefix="")
@@ -13,7 +14,7 @@ can = Camera()
 # Initialization
 frame = None
 last_capture_time = None
-fps = 0.5 # Not FPS, frequency
+fps = 1.00 / float(os.getenv('FPS', 0.5)) # Not FPS, frequency
 
 
 @router.get("/")
