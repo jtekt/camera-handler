@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from controller import settings as settings_controller
 from validation.settings import Configuration
 
-router = APIRouter(prefix="/settings")
+router = APIRouter(prefix="/parameters")
 
 
 @router.get("/")
