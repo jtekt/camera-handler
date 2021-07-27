@@ -21,8 +21,8 @@ fps = 1.00 / float(os.getenv('FPS', 2.0)) # Not FPS, frequency
 def root():
     return dict(
         application_name="Camera handler",
-        version="1.0.0",
-        author="Maxime MOREILLON",
+        version="1.0.2",
+        author="Justin YEOH, Maxime MOREILLON",
         camera_opened=can.cap.isOpened(),
     )
 

@@ -2,9 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import root, settings
 from controller.camera import Camera
+import os
+
+
+
 
 # App initialization
-app = FastAPI()
+app = FastAPI(root_path=os.getenv('ROOT_PATH', None))
 
 # Middleware
 app.add_middleware(
