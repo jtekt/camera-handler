@@ -1,5 +1,7 @@
 from fastapi import Header, Cookie, APIRouter
 from controller.camera import Camera, get_last_capture_boolean
+from controller import settings as settings_controller
+from validation.settings import Configuration
 from typing import Optional
 from fastapi.responses import StreamingResponse, Response
 import time
@@ -21,7 +23,7 @@ fps = 1.00 / float(os.getenv('FPS', 2.0)) # Not FPS, frequency
 def root():
     return dict(
         application_name="Camera handler",
-        version="1.0.2",
+        version="1.0.3",
         author="Justin YEOH, Maxime MOREILLON",
         camera_opened=can.cap.isOpened(),
     )
@@ -76,3 +78,19 @@ def yield_stream():
             yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
     except:
         print("User Disconnected")
+
+
+@router.get("/settings")
+async def get_camera_settings():
+    settings = settings_controller.get_camera_settings()
+    return settings
+
+
+@router.patch("/settings")
+async def configure_camera(configuration: Configuration = {}):
+    configuration = configuration.dict(exclude_unset=True)
+
+    if configuration:
+        settings_controller.configure_camera(configuration)
+    settings = settings_controller.get_camera_settings()
+    return settings
