@@ -1,5 +1,5 @@
 stages:
-  - build-dev
+  # - build-dev
   - build-prod
 
 variables:
@@ -7,21 +7,21 @@ variables:
   GITLAB_REGISTRY: 172.16.98.151:5000
   DOCKER_IMAGE: $GITLAB_REGISTRY/$APPLICATION_NAME
 
-build-dev:
-  tags:
-    - aarch64
-  stage: build-dev
-  script:
-    - docker build -t $DOCKER_IMAGE:dev .
-    - docker push $DOCKER_IMAGE:dev
-    - echo "Image built and pushed:" "$DOCKER_IMAGE:dev"
+# build-dev:
+#   tags:
+#     - aarch64
+#   stage: build-dev
+#   script:
+#     - docker build -t $DOCKER_IMAGE:dev .
+#     - docker push $DOCKER_IMAGE:dev
+#     - echo "Image built and pushed:" "$DOCKER_IMAGE:dev"
 
 build-prod:
   tags:
     - aarch64
   stage: build-prod
-  rules:
-    - when: manual
+  # rules:
+  #   - when: manual
   script:
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
