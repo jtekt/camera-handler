@@ -30,6 +30,8 @@ def configure_camera(args):
     command = "v4l2-ctl -d /dev/video0"
 
     for key in args:
+        
         command = command + " -c {}={}".format(key, args[key])
+
 
     os.system(command)

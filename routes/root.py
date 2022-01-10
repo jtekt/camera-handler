@@ -24,7 +24,7 @@ def root():
     return dict(
         application_name="Camera handler",
         version="1.0.3",
-        author="Justin YEOH, Maxime MOREILLON",
+        author="Justin YEOH, Maxime MOREILLON, Bun KAN",
         camera_opened=can.cap.isOpened(),
     )
 
@@ -89,7 +89,7 @@ async def get_camera_settings():
 @router.patch("/settings")
 async def configure_camera(configuration: Configuration = {}):
     configuration = configuration.dict(exclude_unset=True)
-
+    # print (configuration)
     if configuration:
         settings_controller.configure_camera(configuration)
     settings = settings_controller.get_camera_settings()

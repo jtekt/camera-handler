@@ -1,10 +1,19 @@
 import cv2
 from threading import Thread
 import time
+from controller import settings as settings_controller
+
 
 
 class Camera(object):
     def __init__(self):
+        #camera initialize parameter auto off
+        cam_init_para = {
+        "exposure_auto" : 1,
+        "white_balance_temperature_auto" : 0
+        }
+
+        settings_controller.configure_camera(cam_init_para)
         self.stream_flag = False
         self.start_camera()
 
