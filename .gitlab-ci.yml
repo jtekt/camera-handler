@@ -1,28 +1,23 @@
 stages:
-  # - build-dev
-  - build-prod
+  - build
 
 variables:
   APPLICATION_NAME: camera-handler-fastapi
-  GITLAB_REGISTRY: 172.16.98.151:5000
-  DOCKER_IMAGE: $GITLAB_REGISTRY/$APPLICATION_NAME
+  CONTAINER_REGISTRY: 172.16.98.151:5000
+  CONTAINER_TAG: ${CI_COMMIG_SHORT_SHA}
+  CONTAINER_IMAGE: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
+  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CONTAINER_TAG}
 
-# build-dev:
-#   tags:
-#     - aarch64
-#   stage: build-dev
-#   script:
-#     - docker build -t $DOCKER_IMAGE:dev .
-#     - docker push $DOCKER_IMAGE:dev
-#     - echo "Image built and pushed:" "$DOCKER_IMAGE:dev"
+
 
 build-prod:
   tags:
     - aarch64
-  stage: build-prod
-  # rules:
-  #   - when: manual
+  only:
+    - master
+  stage: build
   script:
-    - docker build -t $DOCKER_IMAGE .
-    - docker push $DOCKER_IMAGE
-    - echo "Image built and pushed:" "$DOCKER_IMAGE"
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_TAGGED}
+    - docker push ${CONTAINER_IMAGE}
+    - docker push ${CONTAINER_IMAGE_TAGGED}
