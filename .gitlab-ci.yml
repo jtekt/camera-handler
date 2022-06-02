@@ -10,7 +10,7 @@ variables:
 
 
 
-build-prod:
+build-aarch64:
   tags:
     - aarch64
   only:
