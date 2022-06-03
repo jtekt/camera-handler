@@ -6,9 +6,7 @@ def get_camera_settings():
 
     command = "v4l2-ctl -d /dev/video0 -l"
 
-    process = subprocess.run(
-        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
+    process = subprocess.run( command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE )
 
     settings = {}
 
