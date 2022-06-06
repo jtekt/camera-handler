@@ -10,8 +10,7 @@ class Camera(object):
     def __init__(self):
 
         # apply Initial configuration
-        # TODO: Take initial configuration from env
-
+        # Initial configuration can be set as environment variable
         initial_settings_string = os.getenv('INITIAL_SETTINGS', '{ "exposure_auto" : 1, "white_balance_temperature_auto" : 0 }')
         initial_settings_dict = json.loads(initial_settings_string)
         settings_controller.configure_camera(initial_settings_dict)
