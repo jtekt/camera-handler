@@ -16,13 +16,12 @@ class Camera(object):
         initial_settings_dict = json.loads(initial_settings_string)
         settings_controller.configure_camera(initial_settings_dict)
 
-        self.stream_flag = False
-        self.start_camera()
+        self.start()
 
-    def start_camera(self):
+    def start(self):
         self.cap = cv2.VideoCapture(0)
 
-    def stop_camera(self):
+    def stop(self):
         self.cap.release()
 
     def get_frame(self):
@@ -33,21 +32,10 @@ class Camera(object):
         return cv2.imencode(".jpeg", self.frame)[1].tobytes()
 
     def write_frame(self, name):
+        # Currently unused
         with open(name, "wb") as f:
             f.write(self.frame_bytes)
 
-    def start_stream(self):
-        self.stream_flag = True
-        self.t = Thread(target=self.stream)
-        self.t.start()
-
-    def stream(self):
-        while self.stream_flag:
-            self.get_frame()
-
-    def stop_stream(self):
-        self.stream_flag = False
-        self.t.join()
 
 
 def get_last_capture_boolean(frame, last_capture_time, fps):
