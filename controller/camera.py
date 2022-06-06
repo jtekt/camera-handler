@@ -3,7 +3,7 @@ from threading import Thread
 import time
 from controller import settings as settings_controller
 import json
-
+import os
 
 
 class Camera(object):
@@ -13,7 +13,7 @@ class Camera(object):
         # TODO: Take initial configuration from env
 
         initial_settings_string = os.getenv('INITIAL_SETTINGS', '{ "exposure_auto" : 1, "white_balance_temperature_auto" : 0 }')
-        initial_settings_dict = json.loads(initial_settings)
+        initial_settings_dict = json.loads(initial_settings_string)
         settings_controller.configure_camera(initial_settings_dict)
 
         self.stream_flag = False
