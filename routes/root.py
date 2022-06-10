@@ -11,7 +11,7 @@ import os
 router = APIRouter(prefix="")
 
 # Camera initialization
-can = Camera()
+cam = Camera()
 
 # Initialization
 frame = None
@@ -25,16 +25,16 @@ def root():
         application_name="Camera handler",
         version="1.0.3",
         author="Justin YEOH, Maxime MOREILLON, Bun KAN",
-        camera_opened=can.cap.isOpened(),
+        camera_opened=cam.cap.isOpened(),
     )
 
 
 @router.get("/start")
 async def start_camera():
     try:
-        if can.cap.isOpened():
+        if cam.cap.isOpened():
             return {"message": "Camera is already opened"}
-        can.start_camera()
+        cam.start()
         return {"message": "Camera has been started"}
     except Exception as e:
         return {"message": "Camera start failed", "detail": str(e)}
@@ -43,7 +43,7 @@ async def start_camera():
 @router.get("/stop")
 async def stop_camera():
     try:
-        can.stop_camera()
+        cam.stop()
         return {"message": "Camera has been stopped"}
     except Exception as e:
         return {"message": "Camera stop failed", "detail": str(e)}
@@ -52,8 +52,8 @@ async def stop_camera():
 @router.get("/frame")
 async def frame():
     global frame, last_capture_time
-    can.get_frame()
-    frame = can.get_frame_in_byte()
+    cam.get_frame()
+    frame = cam.get_frame_in_byte()
     last_capture_time = time.time()
     return Response(content=frame, media_type="image/jpeg")
 
@@ -72,8 +72,8 @@ def yield_stream():
     try:
         while True:
             if get_last_capture_boolean(frame, last_capture_time, fps):
-                can.get_frame()
-                frame = can.get_frame_in_byte()
+                cam.get_frame()
+                frame = cam.get_frame_in_byte()
                 last_capture_time = time.time()
             yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
     except:
