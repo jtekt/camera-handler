@@ -2,7 +2,8 @@ import cv2
 from threading import Thread
 import time
 from controller import settings as settings_controller
-
+import json
+import os
 
 
 class Camera(object):
@@ -10,8 +11,10 @@ class Camera(object):
 
         # apply Initial configuration
         # TODO: Take initial configuration from env
-        cam_init_para = { "exposure_auto" : 1, "white_balance_temperature_auto" : 0 }
-        settings_controller.configure_camera(cam_init_para)
+
+        initial_settings_string = os.getenv('INITIAL_SETTINGS', '{ "exposure_auto" : 1, "white_balance_temperature_auto" : 0 }')
+        initial_settings_dict = json.loads(initial_settings_string)
+        settings_controller.configure_camera(initial_settings_dict)
 
         self.stream_flag = False
         self.start_camera()
