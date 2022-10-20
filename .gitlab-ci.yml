@@ -1,23 +1,39 @@
 stages:
-  - build
+- build
+
+  
+
+image: moreillon/tdd-dind
+services:
+- name: docker:19.03.12-dind
+
+  
+  
 
 variables:
-  APPLICATION_NAME: camera-handler-fastapi
-  CONTAINER_REGISTRY: 172.16.98.151:5000
-  CONTAINER_TAG: ${CI_COMMIT_SHORT_SHA}
-  CONTAINER_IMAGE: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
-  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CONTAINER_TAG}
+  APPLICATION_NAME: camera-handler
+  AWS_ECR_PUBLIC_URL: public.ecr.aws/u6l4m3e5
+  CONTAINER_IMAGE: ${AWS_ECR_PUBLIC_URL}/${APPLICATION_NAME}
+  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
 
-
+  
 
 build-aarch64:
+  stage: build
   tags:
     - aarch64
   only:
     - master
-  stage: build
+  tags:
+    - dind
+  before_script:
+    - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ECR_PUBLIC_URL}
+    - >
+      aws ecr-public create-repository --region us-east-1 --repository-name ${APPLICATION_NAME}
+      || echo "Repository might have already existed"
+
   script:
-    - docker build -t ${CONTAINER_IMAGE} .
-    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_TAGGED}
-    - docker push ${CONTAINER_IMAGE}
-    - docker push ${CONTAINER_IMAGE_TAGGED}
+  - docker build -t ${CONTAINER_IMAGE} .
+  - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_TAGGED}
+  - docker push ${CONTAINER_IMAGE}
+  - docker push ${CONTAINER_IMAGE_TAGGED}
